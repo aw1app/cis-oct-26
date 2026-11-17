@@ -1,7 +1,7 @@
 def calculator(operation, num1, num2):
 	"""Apply addition, subtraction, multiplication, or division to two numbers."""
 	if operation == "add":
-		return num1 + num2
+		return num1 + num2 + 10 
 	if operation == "subtract":
 		return num1 - num2
 	if operation == "multiply":
