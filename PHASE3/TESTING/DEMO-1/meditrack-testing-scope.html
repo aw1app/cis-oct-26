@@ -1,0 +1,649 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="QA testing scope for MediTrack analytics updates, responsive UI, and API security.">
+  <title>MediTrack | QA Testing Scope</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #1d2928;
+      --muted: #536462;
+      --paper: #f5f7f3;
+      --surface: #ffffff;
+      --line: #d7dfd9;
+      --green: #176d58;
+      --green-soft: #e6f2ec;
+      --blue: #315d77;
+      --blue-soft: #e8f0f5;
+      --coral: #a64e3d;
+      --coral-soft: #f8ece8;
+      --gold: #82621a;
+      --gold-soft: #f5f0df;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: "Avenir Next", Avenir, "Segoe UI", sans-serif;
+      line-height: 1.55;
+    }
+
+    .page {
+      width: min(1120px, calc(100% - 40px));
+      margin: 0 auto;
+      padding: 48px 0 64px;
+    }
+
+    .masthead {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .masthead strong { color: var(--green); }
+
+    .intro {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(220px, 0.36fr);
+      align-items: end;
+      gap: 32px;
+      padding: 42px 0 32px;
+    }
+
+    h1, h2, h3, p { margin-top: 0; }
+
+    h1 {
+      max-width: 760px;
+      margin-bottom: 14px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2.4rem, 5vw, 4.5rem);
+      font-weight: 400;
+      line-height: 1.02;
+      letter-spacing: 0;
+    }
+
+    .lede {
+      max-width: 670px;
+      margin-bottom: 0;
+      color: var(--muted);
+      font-size: 1.05rem;
+    }
+
+    .brief-note {
+      border-left: 3px solid var(--green);
+      padding: 4px 0 4px 16px;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .brief-note b {
+      display: block;
+      margin-bottom: 5px;
+      color: var(--ink);
+      font-size: 0.75rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .focus-nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 0 0 24px;
+    }
+
+    .focus-nav a {
+      display: inline-flex;
+      align-items: center;
+      min-height: 38px;
+      padding: 7px 12px;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      background: var(--surface);
+      color: var(--ink);
+      font-size: 0.87rem;
+      text-decoration: none;
+    }
+
+    .focus-nav a:hover, .focus-nav a:focus-visible {
+      border-color: var(--green);
+      outline: 2px solid transparent;
+      color: var(--green);
+    }
+
+    .objectives {
+      margin: 0 0 28px;
+      border: 1px solid var(--line);
+      border-top: 4px solid var(--gold);
+      background: var(--surface);
+    }
+
+    .objectives-heading { padding: 22px 26px 8px; }
+    .objectives-heading h2 { margin-bottom: 6px; }
+    .objectives-heading p {
+      max-width: 850px;
+      margin-bottom: 12px;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .table-wrap { overflow-x: auto; }
+
+    .objective-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.86rem;
+    }
+
+    .objective-table th, .objective-table td {
+      padding: 13px 16px;
+      border-top: 1px solid var(--line);
+      vertical-align: top;
+    }
+
+    .objective-table th {
+      background: #f0f3ef;
+      color: #43524f;
+      font-size: 0.72rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .objective-table td:first-child { min-width: 170px; font-weight: 700; }
+    .objective-table td:nth-child(2) { min-width: 230px; }
+    .objective-table td:nth-child(3) { min-width: 330px; }
+    .objective-table td:nth-child(4) { min-width: 150px; color: var(--muted); }
+
+    .timeline-flag {
+      display: inline-block;
+      margin: 0 0 5px;
+      padding: 2px 6px;
+      border-radius: 3px;
+      background: var(--gold-soft);
+      color: var(--gold);
+      font-size: 0.69rem;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .timeline-note {
+      margin: 0;
+      padding: 14px 26px 18px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 0.84rem;
+    }
+
+    .timeline-note strong { color: var(--ink); }
+
+    .focus-section {
+      margin-top: 20px;
+      border: 1px solid var(--line);
+      border-top: 4px solid var(--accent);
+      background: var(--surface);
+      break-inside: avoid;
+    }
+
+    .analytics { --accent: var(--green); --tint: var(--green-soft); }
+    .responsive { --accent: var(--blue); --tint: var(--blue-soft); }
+    .security { --accent: var(--coral); --tint: var(--coral-soft); }
+
+    .section-heading {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      padding: 23px 26px 20px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .section-number {
+      display: grid;
+      flex: 0 0 38px;
+      width: 38px;
+      height: 38px;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--tint);
+      color: var(--accent);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1.15rem;
+    }
+
+    h2 {
+      margin-bottom: 4px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1.65rem;
+      font-weight: 400;
+      line-height: 1.2;
+      letter-spacing: 0;
+    }
+
+    .section-heading p {
+      margin-bottom: 0;
+      color: var(--muted);
+      font-size: 0.91rem;
+    }
+
+    .section-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .detail {
+      padding: 21px 26px 23px;
+    }
+
+    .detail:nth-child(odd) { border-right: 1px solid var(--line); }
+    .detail:nth-child(n + 3) { border-top: 1px solid var(--line); }
+
+    h3 {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.075em;
+      text-transform: uppercase;
+    }
+
+    h3::before {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--accent, var(--gold));
+      content: "";
+    }
+
+    .detail ul {
+      display: grid;
+      gap: 8px;
+      margin: 0;
+      padding-left: 19px;
+      color: #354442;
+      font-size: 0.92rem;
+    }
+
+    .detail li::marker { color: var(--accent, var(--gold)); }
+
+    .end-matter {
+      display: grid;
+      grid-template-columns: 0.8fr 1.2fr;
+      gap: 20px;
+      margin-top: 28px;
+    }
+
+    .end-panel {
+      padding: 23px 25px;
+      border: 1px solid var(--line);
+      background: var(--surface);
+    }
+
+    .end-panel.assumptions { border-top: 4px solid var(--gold); }
+    .end-panel.questions { border-top: 4px solid var(--blue); }
+
+    .end-panel h2 {
+      margin-bottom: 16px;
+      font-size: 1.45rem;
+    }
+
+    .end-panel ul, .end-panel ol {
+      display: grid;
+      gap: 9px;
+      margin: 0;
+      padding-left: 20px;
+      color: #354442;
+      font-size: 0.9rem;
+    }
+
+    .assumptions li::marker { color: var(--gold); }
+    .questions li::marker { color: var(--blue); font-weight: 700; }
+
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      margin-top: 24px;
+      padding-top: 14px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 0.78rem;
+    }
+
+    @media (max-width: 720px) {
+      .page { width: min(100% - 28px, 560px); padding-top: 24px; }
+      .intro { grid-template-columns: 1fr; gap: 20px; padding-top: 30px; }
+      .brief-note { max-width: 420px; }
+      .section-heading { padding: 19px 18px 17px; }
+      .detail { padding: 18px; }
+      .end-matter { grid-template-columns: 1fr; }
+      .objectives-heading { padding: 19px 18px 8px; }
+      .timeline-note { padding-right: 18px; padding-left: 18px; }
+    }
+
+    @media (max-width: 480px) {
+      .masthead { align-items: flex-start; font-size: 0.68rem; }
+      .section-grid { grid-template-columns: 1fr; }
+      .detail:nth-child(odd) { border-right: 0; }
+      .detail:nth-child(n + 2) { border-top: 1px solid var(--line); }
+      .footer { flex-direction: column; gap: 4px; }
+    }
+
+    @media print {
+      :root { --paper: #fff; }
+      body { background: #fff; font-size: 10pt; }
+      .page { width: 100%; padding: 0; }
+      .focus-nav { display: none; }
+      .focus-section, .end-panel { box-shadow: none; }
+      a { color: inherit; }
+      .focus-section, .end-panel { break-inside: avoid; }
+      .intro { padding-top: 24px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <div class="masthead">
+      <span><strong>MediTrack</strong> / Quality Assurance</span>
+      <span>Testing scope · Project brief</span>
+    </div>
+
+    <header class="intro">
+      <div>
+        <h1>Testing scope</h1>
+        <p class="lede">A focused QA scope for a healthcare analytics platform delivering patient insights to providers across desktop, tablet, and mobile.</p>
+      </div>
+      <aside class="brief-note">
+        <b>Basis</b>
+        React web app · FastAPI REST APIs · PostgreSQL · 4-month delivery timeline
+      </aside>
+    </header>
+
+    <nav class="focus-nav" aria-label="Testing focus areas">
+      <a href="#analytics">01 · Analytics updates</a>
+      <a href="#responsive">02 · UI responsiveness</a>
+      <a href="#security">03 · API security</a>
+      <a href="#objectives">Measurable objectives</a>
+      <a href="#questions">Assumptions &amp; questions</a>
+    </nav>
+
+    <section class="objectives" id="objectives" aria-labelledby="objectives-title">
+      <header class="objectives-heading">
+        <h2 id="objectives-title">Proposed measurable objectives</h2>
+        <p>These are starting acceptance targets, not commitments from the project brief. Confirm expected peak load, measurement environment, exclusions, and business tolerance with stakeholders before baselining.</p>
+      </header>
+      <div class="table-wrap">
+        <table class="objective-table">
+          <thead>
+            <tr>
+              <th scope="col">Objective</th>
+              <th scope="col">Metric</th>
+              <th scope="col">Target</th>
+              <th scope="col">Stakeholder who cares most</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Service availability</td>
+              <td>Successful synthetic checks of core API and dashboard entry points, measured over a continuous 30-day production-like run.</td>
+              <td><span class="timeline-flag">Timeline watch</span><br>At least 99.9% availability per 30-day period, excluding agreed scheduled maintenance. Define whether failed dependencies count as MediTrack downtime.</td>
+              <td>Project manager; healthcare providers</td>
+            </tr>
+            <tr>
+              <td>API responsiveness</td>
+              <td>Server-side response time for agreed critical read endpoints at the approved peak concurrent-user load, measured over a 30-minute steady-state run.</td>
+              <td> p95 at or below 500 ms and p99 at or below 1 second. Report errors and throughput alongside latency; exclude third-party wait time unless agreed otherwise.</td>
+              <td>Development team; healthcare providers</td>
+            </tr>
+            <tr>
+              <td>Dashboard refresh latency</td>
+              <td>Elapsed time from MediTrack accepting a valid source update to the affected dashboard rendering the updated value.</td>
+              <td>p95 at or below 5 seconds and p99 at or below 10 seconds at the agreed load. Include a visible stale-data state when the freshness threshold is exceeded.</td>
+              <td>Healthcare providers</td>
+            </tr>
+            <tr>
+              <td>Analytics data integrity</td>
+              <td>Pass rate for deterministic critical cases covering patient identity, timestamps, units, corrections, missing data, and derived values.</td>
+              <td>100% of approved critical cases match the agreed source-of-truth rules; zero patient cross-match errors. This is data integrity testing, not clinical validation.</td>
+              <td>Healthcare providers; QA team</td>
+            </tr>
+            <tr>
+              <td>API privacy and authorization</td>
+              <td>Scoped authorization-matrix cases passed and open Critical/High findings in the tested API surface at release review.</td>
+              <td>100% of approved positive and negative access cases pass; zero open Critical or High findings before release.</td>
+              <td>Development team; project manager</td>
+            </tr>
+            <tr>
+              <td>Mobile critical workflows</td>
+              <td>Critical workflow pass rate on the stakeholder-approved mobile browser/device matrix, including session expiry and interrupted connectivity.</td>
+              <td><span class="timeline-flag">Timeline watch</span><br>100% of critical workflows pass; zero open Sev1/Sev2 defects on supported configurations. Keep the matrix limited to agreed representative devices.</td>
+              <td>Healthcare providers; QA team</td>
+            </tr>
+            <tr>
+              <td>Release defect threshold</td>
+              <td>Open defects by agreed severity at the release decision point.</td>
+              <td>Zero open Sev1/Sev2 defects. Every remaining Sev3+ defect has a documented impact, owner, workaround where applicable, and explicit stakeholder disposition.</td>
+              <td>Project manager; QA team</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="timeline-note"><strong>Four-month timeline risk:</strong> A defensible 30-day availability run, performance testing after a stable build, remediation/retest cycles, and a wide mobile device matrix can compete with the same final test window. Start environment and target decisions early, run performance and device checks incrementally, and reserve the continuous uptime observation window in the schedule.</p>
+    </section>
+
+    <section class="focus-section analytics" id="analytics" aria-labelledby="analytics-title">
+      <header class="section-heading">
+        <span class="section-number" aria-hidden="true">01</span>
+        <div>
+          <h2 id="analytics-title">Dynamic data analytics updates</h2>
+          <p>Confidence that dashboard data changes promptly, accurately, and visibly when underlying patient data changes.</p>
+        </div>
+      </header>
+      <div class="section-grid">
+        <article class="detail">
+          <h3>In scope</h3>
+          <ul>
+            <li>Verify new and changed patient data appears without manual refresh.</li>
+            <li>Check consistency between dashboard values, summaries, visualizations, and underlying data.</li>
+            <li>Exercise multiple data types, dashboard views, and concurrent users.</li>
+            <li>Check behavior for delayed, duplicate, incomplete, or failed updates and recovery after connectivity returns.</li>
+            <li>Verify patient identity matching, source and received timestamps, time zones, units, rounding, and missing-data indicators are handled consistently.</li>
+            <li>Check freshness indicators and distinguish a late or unavailable feed from a current value.</li>
+          </ul>
+        </article>
+        <article class="detail">
+          <h3>Out of scope</h3>
+          <ul>
+            <li>Clinical validation of analytics, diagnoses, or treatment recommendations.</li>
+            <li>Validation of upstream source systems beyond the MediTrack integration boundary.</li>
+            <li>Performance certification at an unconfirmed scale or update rate.</li>
+          </ul>
+        </article>
+        <article class="detail">
+          <h3>Key risks</h3>
+          <ul>
+            <li>Stale or duplicated updates could inform decisions with incorrect data.</li>
+            <li>Dashboards may show inconsistent values for the same patient or period.</li>
+            <li>Delayed or reordered events could create misleading trends.</li>
+            <li>Failures may go unnoticed, leaving users unaware that displayed data is outdated.</li>
+            <li>Incorrect patient matching, unit conversion, timestamp interpretation, or correction handling could make otherwise plausible analytics inaccurate.</li>
+          </ul>
+        </article>
+        <article class="detail">
+          <h3>Main test scenarios</h3>
+          <ul>
+            <li>Send a new update and verify the relevant dashboard changes within the agreed latency target.</li>
+            <li>Change or remove data and verify every affected count, chart, and summary.</li>
+            <li>Send duplicate, delayed, out-of-order, and invalid updates; verify safe handling and data integrity.</li>
+            <li>Interrupt and restore the update connection; verify recovery, reconciliation, and stale-data indication.</li>
+            <li>Correct or retract a source record and verify derived analytics recalculate without retaining obsolete values.</li>
+            <li>Compare boundary timestamps, daylight-saving transitions, time zones, units, rounding, and missing values against the agreed source-of-truth rules.</li>
+            <li>Compare dashboards across concurrent user sessions; test filters, date ranges, sorting, and navigation for stale or mismatched results.</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section class="focus-section responsive" id="responsive" aria-labelledby="responsive-title">
+      <header class="section-heading">
+        <span class="section-number" aria-hidden="true">02</span>
+        <div>
+          <h2 id="responsive-title">UI responsiveness</h2>
+          <p>Usable, readable provider workflows across supported screen sizes and device orientations.</p>
+        </div>
+      </header>
+      <div class="section-grid">
+        <article class="detail">
+          <h3>In scope</h3>
+          <ul>
+            <li>Verify core provider workflows on desktop, tablet, and mobile screen sizes.</li>
+            <li>Check layout, readability, navigation, charts, tables, forms, and interactive controls at agreed viewports.</li>
+            <li>Check loading, empty, error, and long-content states on smaller screens.</li>
+            <li>Verify resizing or rotating does not lose input or break the current view.</li>
+            <li>Check touch-target usability, text zoom, orientation changes, and important patient information at supported mobile sizes.</li>
+            <li>Verify session expiry, logout, and sensitive-data handling on shared or unattended devices.</li>
+            <li>Check network changes and interrupted connections; confirm offline access or local storage occurs only if explicitly supported and authorized.</li>
+          </ul>
+        </article>
+        <article class="detail">
+          <h3>Out of scope</h3>
+          <ul>
+            <li>Native iOS or Android application testing; the brief specifies a React web front end.</li>
+            <li>Formal accessibility certification or exhaustive assistive-technology testing unless separately agreed.</li>
+            <li>Browser and device combinations outside the approved support matrix.</li>
+          </ul>
+        </article>
+        <article class="detail">
+          <h3>Key risks</h3>
+          <ul>
+            <li>Important patient information or controls may be clipped, obscured, or hard to use on mobile.</li>
+            <li>Dense charts and tables may become unreadable or require impractical scrolling.</li>
+            <li>Responsive changes may trigger accidental actions or lose entered data.</li>
+            <li>Browser differences may affect layout or interaction behavior.</li>
+            <li>Shared, lost, or unattended devices could expose a patient record through an active session, browser history, cached content, or a stale screen.</li>
+            <li>Unreliable mobile connectivity could leave users acting on stale data or cause duplicate submissions after retry.</li>
+          </ul>
+        </article>
+        <article class="detail">
+          <h3>Main test scenarios</h3>
+          <ul>
+            <li>Complete key workflows at approved desktop, tablet, and mobile viewport sizes.</li>
+            <li>Check dashboards, charts, tables, and patient details with narrow screens, long labels, and large data sets.</li>
+            <li>Rotate devices and resize viewports during navigation and data entry.</li>
+            <li>Check menus, dialogs, forms, validation messages, and touch controls for visibility and usability.</li>
+            <li>Verify loading, empty, error, and offline states across the supported browser/device matrix.</li>
+            <li>Background and resume the app, let a session expire, log out, then use browser back/history and a second user session to check that patient data and access do not persist or cross over.</li>
+            <li>Switch between Wi-Fi and mobile data during dashboard refreshes and submissions; verify freshness is clear and retries do not duplicate updates.</li>
+            <li>Confirm text remains usable with browser zoom and larger system text, and that key controls remain reachable without horizontal scrolling where the workflow requires it.</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section class="focus-section security" id="security" aria-labelledby="security-title">
+      <header class="section-heading">
+        <span class="section-number" aria-hidden="true">03</span>
+        <div>
+          <h2 id="security-title">API security</h2>
+          <p>Protection of patient data across REST endpoints and integrations, tested only in authorized environments.</p>
+        </div>
+      </header>
+      <div class="section-grid">
+        <article class="detail">
+          <h3>In scope</h3>
+          <ul>
+            <li>Verify authentication and authorization for patient-data endpoints and integrations.</li>
+            <li>Check that users and integrations can access only permitted data and operations.</li>
+            <li>Test input validation, error handling, transport security, and common API misuse protections.</li>
+            <li>Check that sensitive patient information is not unnecessarily exposed in responses, errors, or logs.</li>
+            <li>Verify data minimization, patient/tenant isolation, and access decisions for each relevant role and integration.</li>
+            <li>Check sensitive-data handling in URLs, caching, audit records, and session/token lifecycle; confirm only approved fields and retention behavior are used.</li>
+          </ul>
+        </article>
+        <article class="detail">
+          <h3>Out of scope</h3>
+          <ul>
+            <li>Production testing or use of real patient data without explicit authorization and safeguards.</li>
+            <li>Infrastructure, network, cloud-account, and third-party system testing outside the API boundary.</li>
+            <li>Formal regulatory or compliance certification; applicable standards are not specified.</li>
+          </ul>
+        </article>
+        <article class="detail">
+          <h3>Key risks</h3>
+          <ul>
+            <li>Unauthorized access or overly broad permissions could expose patient data.</li>
+            <li>Weak integration credential or token handling could enable misuse.</li>
+            <li>Unexpected inputs or verbose errors could reveal sensitive data or implementation details.</li>
+            <li>Insufficient auditability could impede investigation of inappropriate access.</li>
+            <li>Patient data may leak through browser or intermediary caches, URLs, logs, exports, or sessions that remain valid after logout or expiry.</li>
+          </ul>
+        </article>
+        <article class="detail">
+          <h3>Main test scenarios</h3>
+          <ul>
+            <li>Call protected endpoints without credentials, with invalid or expired credentials, and with valid credentials.</li>
+            <li>Attempt cross-patient access and out-of-role operations; verify access is denied.</li>
+            <li>Submit malformed, unexpected, oversized, and boundary-value inputs; verify safe validation and consistent errors.</li>
+            <li>Verify approved secure transport and check that errors and logs do not reveal unnecessary patient data.</li>
+            <li>Check excessive-request handling against agreed throttling controls and verify security events are auditable.</li>
+            <li>Inspect responses and error paths for excess patient fields; verify sensitive values are not placed in URLs or retained in unauthorized caches or logs.</li>
+            <li>Test token expiry, refresh, revocation, and logout, including a request made immediately after access is withdrawn.</li>
+            <li>Verify audit records capture who accessed which patient record and when, while excluding secrets and unnecessary clinical details.</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section class="end-matter" id="questions" aria-label="Assumptions and stakeholder questions">
+      <article class="end-panel assumptions">
+        <h2>Assumptions</h2>
+        <ul>
+          <li>MediTrack is a browser-based React app backed by FastAPI REST APIs and PostgreSQL.</li>
+          <li>Analytics are intended to update near real time; acceptable delay is not yet defined.</li>
+          <li>Testing will use synthetic or de-identified data in non-production environments.</li>
+          <li>Stakeholders will provide supported browsers, device sizes, roles, and integration details.</li>
+          <li>Security testing will be authorized, environment-limited, and coordinated with development.</li>
+        </ul>
+      </article>
+      <article class="end-panel questions">
+        <h2>Questions for stakeholders</h2>
+        <ol>
+          <li>What is the maximum acceptable delay from source update to dashboard display?</li>
+          <li>Which data sources and update mechanisms are included? How should duplicates, late events, corrections, and outages behave?</li>
+          <li>Which analytics and workflows are critical, and how should stale data be indicated?</li>
+          <li>Which browsers, operating systems, devices, and viewport sizes must be supported?</li>
+          <li>What user roles exist, and what patient data and API operations may each access?</li>
+          <li>What authentication, integration credential, rate-limit, and audit requirements apply?</li>
+          <li>Which privacy, security, and healthcare regulatory requirements apply, and what evidence is required?</li>
+          <li>What concurrency, data volumes, and API traffic levels should testing represent?</li>
+          <li>Which approved environments and synthetic datasets are available for functional and security testing?</li>
+          <li>What are the source-of-truth rules for patient identity, timestamps, time zones, units, corrections, missing values, and acceptable data freshness?</li>
+          <li>What privacy rules govern minimum-necessary fields, retention, caching, exports, audit logs, session timeout, and shared-device use?</li>
+          <li>Which mobile browsers and OS versions are supported? Are personal devices allowed, and are mobile management, MFA, or device-lock requirements in force?</li>
+          <li>Is offline viewing or editing supported on mobile? If so, which data may be stored locally, for how long, and how are changes reconciled?</li>
+        </ol>
+      </article>
+    </section>
+
+    <footer class="footer">
+      <span>Prepared from the MediTrack project brief</span>
+      <span>Scope to be baselined with stakeholders</span>
+    </footer>
+  </main>
+</body>
+</html>

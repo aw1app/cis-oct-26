@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Testing reference for MediTrack privacy, security, accessibility, and performance obligations.">
+  <title>MediTrack | Compliance Testing Reference</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #1d2928;
+      --muted: #536462;
+      --paper: #f5f7f3;
+      --surface: #fff;
+      --line: #d7dfd9;
+      --green: #176d58;
+      --green-soft: #e6f2ec;
+      --blue: #315d77;
+      --blue-soft: #e8f0f5;
+      --coral: #a64e3d;
+      --coral-soft: #f8ece8;
+      --gold: #82621a;
+      --gold-soft: #f5f0df;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: "Avenir Next", Avenir, "Segoe UI", sans-serif;
+      line-height: 1.55;
+    }
+    main { width: min(1160px, calc(100% - 40px)); margin: 0 auto; padding: 40px 0 56px; }
+    .masthead, footer { display: flex; justify-content: space-between; gap: 20px; color: var(--muted); font-size: .78rem; }
+    .masthead { padding-bottom: 14px; border-bottom: 1px solid var(--line); font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+    .masthead strong { color: var(--green); }
+    h1, h2, p { margin-top: 0; }
+    h1 { margin: 34px 0 12px; font: 400 clamp(2.35rem, 5vw, 4rem)/1.04 Georgia, "Times New Roman", serif; letter-spacing: 0; }
+    .lede { max-width: 860px; color: var(--muted); font-size: 1.02rem; }
+    .caveat { margin: 22px 0 26px; padding: 15px 18px; border-left: 4px solid var(--gold); background: var(--gold-soft); color: #574617; font-size: .9rem; }
+    h2 { margin: 30px 0 12px; font: 400 1.6rem Georgia, "Times New Roman", serif; letter-spacing: 0; }
+    .table-wrap { overflow-x: auto; margin-bottom: 26px; border: 1px solid var(--line); background: var(--surface); }
+    table { width: 100%; min-width: 900px; border-collapse: collapse; text-align: left; font-size: .88rem; }
+    th, td { padding: 14px 16px; border-bottom: 1px solid var(--line); vertical-align: top; }
+    th { background: #e9efea; color: #43524f; font-size: .72rem; letter-spacing: .06em; text-transform: uppercase; }
+    tbody tr:last-child td { border-bottom: 0; }
+    tbody tr:nth-child(even) { background: #fbfcfa; }
+    td:first-child { width: 220px; font-weight: 800; }
+    td:nth-child(2) { width: 225px; color: var(--muted); }
+    .evidence { padding: 18px 20px; border: 1px solid var(--line); border-top: 4px solid var(--blue); background: var(--surface); }
+    .evidence ul { display: grid; gap: 8px; margin: 0; padding-left: 20px; color: #354442; font-size: .9rem; }
+    footer { margin-top: 24px; padding-top: 14px; border-top: 1px solid var(--line); }
+    @media (max-width: 650px) {
+      main { width: min(100% - 28px, 600px); padding-top: 24px; }
+      .masthead, footer { flex-direction: column; gap: 4px; }
+    }
+    @media print {
+      :root { --paper: #fff; }
+      body { background: #fff; font-size: 9pt; }
+      main { width: 100%; padding: 0; }
+      .table-wrap { overflow: visible; }
+      table { min-width: 0; font-size: 8pt; }
+      th, td { padding: 8px; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="masthead">
+      <span><strong>MediTrack</strong> / Quality Assurance</span>
+      <span>Compliance testing reference</span>
+    </div>
+
+    <header>
+      <h1>Standards &amp; regulations</h1>
+      <p class="lede">A planning reference for testing patient-data privacy, application security, accessibility, and performance across MediTrack's React web application, FastAPI APIs, and PostgreSQL data layer.</p>
+    </header>
+
+    <p class="caveat"><strong>Applicability must be confirmed.</strong> The project brief does not state deployment jurisdictions, customer/regulatory roles, contracts, or whether MediTrack provides clinical recommendations. Legal, privacy, security, accessibility, and product owners must determine which obligations apply. Testing can produce evidence, but does not by itself establish legal compliance, certification, or clinical safety.</p>
+
+    <section aria-labelledby="privacy-title">
+      <h2 id="privacy-title">Privacy &amp; data protection</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Regulation or standard</th><th>When it may apply</th><th>What MediTrack testing should cover</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>HIPAA Privacy, Security, and Breach Notification Rules</td>
+              <td>US handling of protected health information by a covered entity or business associate. Confirm MediTrack's role and customer agreements.</td>
+              <td>Test role-based access, minimum-necessary disclosure, patient-record isolation, unique user identification, session controls, audit events, integrity protections, and secure transmission. Check that errors, URLs, and logs do not unnecessarily expose PHI. Exercise incident evidence and notification-support workflows with synthetic data. Administrative, physical, and contractual controls need separate review.</td>
+            </tr>
+            <tr>
+              <td>HITECH Act</td>
+              <td>US healthcare contexts involving electronic PHI and HIPAA-regulated entities or business associates.</td>
+              <td>Test controls and auditability for electronic PHI, ability to investigate access/disclosure events, and incident-evidence collection. Confirm breach-response policies and notification responsibilities with the compliance owner.</td>
+            </tr>
+            <tr>
+              <td>GDPR and relevant national data-protection laws</td>
+              <td>Processing within GDPR's territorial scope, including relevant EU/EEA data-subject or establishment cases.</td>
+              <td>Test data minimization in API responses and exports; access restrictions; retention and deletion; correction and access-request workflows; configured legal-basis behavior (consent only where consent is the basis); privacy-safe logs; and protection in transit and at rest. Verify rights workflows locate the correct data across MediTrack views and connected components.</td>
+            </tr>
+            <tr>
+              <td>UK GDPR and Data Protection Act 2018</td>
+              <td>Processing within the UK GDPR's scope; confirm sector-specific and contractual requirements.</td>
+              <td>Test applicable privacy controls, rights-request workflows, retention, access restrictions, and incident evidence for UK processing. Confirm UK-specific policy and data-transfer requirements with privacy/legal owners.</td>
+            </tr>
+            <tr>
+              <td>PIPEDA and applicable provincial privacy laws</td>
+              <td>Potentially relevant to Canadian deployments, depending on jurisdiction, organization, and processing context.</td>
+              <td>Have counsel identify the applicable law and map requirements to MediTrack. Test the resulting access, correction, safeguards, retention, disclosure, and incident-handling controls; do not assume one national rule covers all deployments.</td>
+            </tr>
+            <tr>
+              <td>ISO/IEC 27701</td>
+              <td>Optional privacy information management framework, commonly used alongside ISO/IEC 27001.</td>
+              <td>Map application and privacy workflow tests to the organization's selected controls, retain traceable results, and review relevant processor/controller responsibilities. Organizational policies, supplier oversight, and independent assessment require broader evidence.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section aria-labelledby="security-title">
+      <h2 id="security-title">Security</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Standard or framework</th><th>Purpose</th><th>What MediTrack testing should cover</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>ISO/IEC 27001</td>
+              <td>Organization-level information security management system (ISMS); not an application test checklist.</td>
+              <td>Map application test evidence to selected controls. Test authentication, authorization, secure configuration, dependency/vulnerability management, audit logging, backups and recovery, and incident response. Keep findings, remediation, and retest evidence for the ISMS owner; assess organization-level controls separately.</td>
+            </tr>
+            <tr>
+              <td>NIST Cybersecurity Framework</td>
+              <td>Risk-management framework for organizing cybersecurity outcomes.</td>
+              <td>Use the organization's chosen profile to identify gaps and evidence. Test relevant protect, detect, respond, and recover controls in the application, APIs, and delivery pipeline; exercise authorized incident and recovery scenarios.</td>
+            </tr>
+            <tr>
+              <td>OWASP ASVS and OWASP API Security Top 10</td>
+              <td>Technical verification references for web applications and APIs. Select and record the applicable versions and verification depth.</td>
+              <td>Test object- and function-level authorization, patient/tenant isolation, authentication and token expiry/revocation, input validation, rate limiting, sensitive-data exposure, error handling, and API configuration. Run authorized dynamic scans in non-production; manually verify important findings and cross-patient/privilege-boundary cases.</td>
+            </tr>
+            <tr>
+              <td>SOC 2 Trust Services Criteria</td>
+              <td>Optional independent attestation often requested by customers; not a law or product certification.</td>
+              <td>If contractually required, provide evidence for applicable security, availability, confidentiality, or privacy controls over the audit period. Application tests can support the evidence but do not replace the independent audit or organizational control review.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section aria-labelledby="accessibility-title">
+      <h2 id="accessibility-title">Accessibility</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Standard or law</th><th>When it may apply</th><th>What MediTrack testing should cover</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>WCAG 2.2 Level AA</td>
+              <td>Common technical target for web accessibility. Confirm required version and conformance level with customers and applicable law.</td>
+              <td>Test critical workflows for keyboard-only use, visible focus, logical focus order, accessible names and instructions, validation/error announcements, contrast, zoom/reflow, and touch target usability. Ensure charts and tables have accessible alternatives or equivalent data views. Combine automated scans with manual keyboard and screen-reader testing.</td>
+            </tr>
+            <tr>
+              <td>ADA / Section 508 (US); EN 301 549 / European Accessibility Act (EU)</td>
+              <td>Potentially applicable based on jurisdiction, public-sector use, organization, service, and market. Confirm legal scope and current required versions.</td>
+              <td>Test the applicable WCAG-based requirements in authentication, dashboards, charts, tables, forms, and error states. Record results by workflow and supported device. Include manual assistive-technology checks; automated scans alone are insufficient.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section aria-labelledby="performance-title">
+      <h2 id="performance-title">Performance, reliability &amp; data freshness</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Reference</th><th>What it establishes</th><th>What MediTrack testing should cover</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>ISO/IEC 25010</td>
+              <td>Product-quality model that includes performance efficiency and reliability; it does not prescribe universal response-time thresholds.</td>
+              <td>Define and test API latency percentiles, throughput, error rates, resource use, availability, and recovery under agreed loads. Record the environment, dataset, workload, measurement method, and results.</td>
+            </tr>
+            <tr>
+              <td>Stakeholder-approved service-level objectives (SLOs)</td>
+              <td>MediTrack-specific acceptance targets are needed because the brief supplies no numeric performance thresholds.</td>
+              <td>Agree uptime measurement windows and exclusions; API p95/p99 response-time targets; dashboard refresh latency; expected concurrency and data volumes; and error budget. Test normal, peak, stress, soak, and recovery behavior. Treat targets in the project scope as proposals until approved.</td>
+            </tr>
+            <tr>
+              <td>Data freshness &amp; analytics integrity requirements</td>
+              <td>Application-specific correctness and freshness objectives for real-time dashboards, rather than a universal external regulation.</td>
+              <td>Measure source-event-to-dashboard latency with synchronized timestamps. Verify patient matching, ordering, duplicates, corrections/retractions, time zones, units, missing values, and consistency across views. Test stale-data indicators and recovery after delay/disconnection. Under load, check for loss, duplication, or cross-patient mixing.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section aria-labelledby="evidence-title">
+      <h2 id="evidence-title">Evidence and applicability decisions</h2>
+      <div class="evidence">
+        <ul>
+          <li>Maintain traceability from each applicable requirement to test case, result, defect, remediation, and retest evidence.</li>
+          <li>Use synthetic or de-identified data in test environments; authorize and scope security testing explicitly.</li>
+          <li>Have privacy/security owners approve data retention, audit-log fields, incident workflows, and access expectations.</li>
+          <li>Have stakeholders approve uptime, API latency, dashboard refresh, workload, and measurement conditions before treating them as acceptance criteria.</li>
+          <li>Confirm whether MediTrack only presents analytics or also provides clinical recommendations. If its intended use may qualify as regulated medical-device software, obtain specialist regulatory guidance and identify additional lifecycle and safety-validation requirements.</li>
+        </ul>
+      </div>
+    </section>
+
+    <footer>
+      <span>Prepared as a MediTrack QA planning reference</span>
+      <span>Not legal advice or a compliance certification</span>
+    </footer>
+  </main>
+</body>
+</html>

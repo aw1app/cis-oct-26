@@ -1,0 +1,341 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Four-month QA testing strategy for MediTrack.">
+  <title>MediTrack | QA Testing Strategy</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #1d2928;
+      --muted: #536462;
+      --paper: #f5f7f3;
+      --surface: #fff;
+      --line: #d7dfd9;
+      --green: #176d58;
+      --green-soft: #e6f2ec;
+      --blue: #315d77;
+      --blue-soft: #e8f0f5;
+      --coral: #a64e3d;
+      --coral-soft: #f8ece8;
+      --gold: #82621a;
+      --gold-soft: #f5f0df;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: "Avenir Next", Avenir, "Segoe UI", sans-serif;
+      line-height: 1.55;
+    }
+
+    .page {
+      width: min(1180px, calc(100% - 40px));
+      margin: 0 auto;
+      padding: 42px 0 56px;
+    }
+
+    .masthead, .footer {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      color: var(--muted);
+      font-size: 0.78rem;
+    }
+
+    .masthead {
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--line);
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .masthead strong { color: var(--green); }
+    h1, h2, p { margin-top: 0; }
+
+    h1 {
+      margin-bottom: 12px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2.5rem, 5vw, 4.25rem);
+      font-weight: 400;
+      line-height: 1.04;
+      letter-spacing: 0;
+    }
+
+    .intro {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(220px, 0.42fr);
+      gap: 32px;
+      align-items: end;
+      padding: 38px 0 28px;
+    }
+
+    .lede { max-width: 720px; margin: 0; color: var(--muted); font-size: 1.03rem; }
+
+    .basis {
+      border-left: 3px solid var(--green);
+      padding: 4px 0 4px 16px;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .basis strong {
+      display: block;
+      margin-bottom: 4px;
+      color: var(--ink);
+      font-size: 0.74rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .callout {
+      margin-bottom: 24px;
+      padding: 14px 18px;
+      border-left: 4px solid var(--gold);
+      background: var(--gold-soft);
+      color: #574617;
+      font-size: 0.91rem;
+    }
+
+    .table-wrap { overflow-x: auto; border: 1px solid var(--line); background: var(--surface); }
+
+    table {
+      width: 100%;
+      min-width: 900px;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.88rem;
+    }
+
+    th, td {
+      padding: 15px 16px;
+      border-bottom: 1px solid var(--line);
+      vertical-align: top;
+    }
+
+    th {
+      background: #e9efea;
+      color: #43524f;
+      font-size: 0.73rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    tbody tr:last-child td { border-bottom: 0; }
+    tbody tr:nth-child(even) { background: #fbfcfa; }
+    td:first-child { width: 150px; font-weight: 800; }
+    td:nth-child(2) { width: 43%; }
+    td:nth-child(3) { width: 33%; }
+    td:last-child { width: 150px; }
+
+    .automation {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 3px;
+      background: var(--green-soft);
+      color: var(--green);
+      font-size: 0.75rem;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .automation.partial { background: var(--blue-soft); color: var(--blue); }
+    .automation.human { background: var(--coral-soft); color: var(--coral); }
+
+    .timeline {
+      margin-top: 28px;
+      padding: 24px 26px;
+      border: 1px solid var(--line);
+      border-top: 4px solid var(--blue);
+      background: var(--surface);
+    }
+
+    h2 {
+      margin-bottom: 15px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1.6rem;
+      font-weight: 400;
+      letter-spacing: 0;
+    }
+
+    .months {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      border-top: 1px solid var(--line);
+    }
+
+    .month {
+      padding: 16px 16px 2px;
+      border-right: 1px solid var(--line);
+    }
+
+    .month:first-child { padding-left: 0; }
+    .month:last-child { padding-right: 0; border-right: 0; }
+    .month h3 { margin: 0 0 8px; color: var(--blue); font-size: 0.77rem; letter-spacing: 0.06em; text-transform: uppercase; }
+    .month p { margin-bottom: 0; color: #354442; font-size: 0.88rem; }
+
+    .gate {
+      margin-top: 18px;
+      padding: 15px 18px;
+      border: 1px solid var(--line);
+      background: #edf2ef;
+      color: #354442;
+      font-size: 0.9rem;
+    }
+
+    .gate strong { color: var(--ink); }
+
+    .schedule-risk {
+      margin: 12px 0 0;
+      padding: 13px 16px;
+      border-left: 4px solid var(--coral);
+      background: var(--coral-soft);
+      color: #69382f;
+      font-size: 0.88rem;
+    }
+
+    .schedule-risk strong { color: #51271f; }
+
+    .footer {
+      margin-top: 24px;
+      padding-top: 14px;
+      border-top: 1px solid var(--line);
+    }
+
+    @media (max-width: 760px) {
+      .page { width: min(100% - 28px, 620px); padding-top: 24px; }
+      .intro { grid-template-columns: 1fr; gap: 18px; padding-top: 28px; }
+      .timeline { padding: 20px 18px; }
+      .months { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .month { padding: 14px 12px; border-bottom: 1px solid var(--line); }
+      .month:nth-child(2) { border-right: 0; }
+      .month:nth-child(3), .month:nth-child(4) { border-bottom: 0; }
+      .month:first-child { padding-left: 0; }
+      .month:nth-child(2) { padding-right: 0; }
+    }
+
+    @media (max-width: 480px) {
+      .masthead, .footer { flex-direction: column; gap: 4px; }
+      .months { grid-template-columns: 1fr; }
+      .month, .month:first-child, .month:nth-child(2) { padding: 13px 0; border-right: 0; border-bottom: 1px solid var(--line); }
+      .month:last-child { border-bottom: 0; }
+    }
+
+    @media print {
+      :root { --paper: #fff; }
+      body { background: #fff; font-size: 9pt; }
+      .page { width: 100%; padding: 0; }
+      .table-wrap { overflow: visible; }
+      table { min-width: 0; font-size: 8pt; }
+      th, td { padding: 8px; }
+      .timeline { break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <div class="masthead">
+      <span><strong>MediTrack</strong> / Quality Assurance</span>
+      <span>Test strategy · 4-month delivery</span>
+    </div>
+
+    <header class="intro">
+      <div>
+        <h1>Test strategy</h1>
+        <p class="lede">A risk-based test approach for MediTrack's real-time analytics, React provider experience, and FastAPI patient-data integrations.</p>
+      </div>
+      <aside class="basis">
+        <strong>Strategy basis</strong>
+        React · FastAPI · PostgreSQL · Doctors, nurses, and hospital administrators on desktop, tablet, and mobile
+      </aside>
+    </header>
+
+    <p class="callout"><strong>Working assumptions:</strong> Month 1 to Month 4 are relative project months. Targets in the companion scope are proposed acceptance criteria and must be baselined against an agreed workload, synthetic/de-identified test data, supported device matrix, and production-like environment.</p>
+
+    <div class="table-wrap" role="region" aria-label="Testing strategy by test type" tabindex="0">
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">Test type</th>
+            <th scope="col">What it covers</th>
+            <th scope="col">When it runs in the 4-month timeline</th>
+            <th scope="col">Should it be automated?</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Unit</td>
+            <td>Small, isolated React and Python logic: analytics calculations, patient/time matching, time-zone and unit handling, missing-value rules, correction behavior, API validation, and UI loading/stale/error states. Stub external feeds and database boundaries.</td>
+            <td><strong>Month 1 onward:</strong> establish test conventions and critical rules early; run on every pull request and code change through Month 4.</td>
+            <td><span class="automation">Yes · CI blocking</span><br>Fast, deterministic tests should be required for merge.</td>
+          </tr>
+          <tr>
+            <td>API / integration</td>
+            <td>FastAPI contracts with PostgreSQL and the analytics update path: authentication behavior, persistence, transaction and error handling, duplicate/out-of-order updates, correction/retraction, role-based data access, and end-to-end refresh measurement from accepted update to rendered dashboard.</td>
+            <td><strong>Month 1:</strong> contract and boundary tests with mocks. <strong>Month 2:</strong> automate against integrated test environments. <strong>Months 3–4:</strong> nightly and release-candidate regression, including recovery paths.</td>
+            <td><span class="automation">Yes · CI + nightly</span><br>Automate stable contracts and critical workflows; keep test data isolated and repeatable.</td>
+          </tr>
+          <tr>
+            <td>Security</td>
+            <td>Authentication and authorization matrix, patient/tenant isolation, minimum-necessary response fields, input validation, token expiry/revocation, transport, rate controls, and privacy leakage through errors, URLs, caches, and audit logs.</td>
+            <td><strong>Month 1:</strong> confirm threat boundaries and roles. <strong>Months 1–4:</strong> automated checks on each build. <strong>Month 3:</strong> focused manual security assessment in an authorized non-production environment. <strong>Month 4:</strong> retest fixes and confirm zero open Critical/High findings.</td>
+            <td><span class="automation partial">Hybrid</span><br>Automate repeatable scans and access checks; manually assess authorization edge cases and privacy behavior.</td>
+          </tr>
+          <tr>
+            <td>Performance</td>
+            <td>Critical API read endpoints at agreed peak concurrency (p95 &le; 500 ms, p99 &le; 1 s); dashboard refresh from accepted update to rendered value (p95 &le; 5 s, p99 &le; 10 s); throughput, error rate, recovery, and synthetic availability (99.9% over 30 days).</td>
+            <td><strong>Month 1:</strong> agree workload and instrumentation. <strong>Month 2:</strong> baseline as integrated paths stabilize. <strong>Month 3:</strong> load/tune and begin the uninterrupted 30-day availability observation as early as the environment permits. <strong>Month 4:</strong> rerun on release candidate and review the complete observation window.</td>
+            <td><span class="automation partial">Mostly yes</span><br>Automate repeatable load profiles and availability probes; use controlled manual investigation for bottleneck diagnosis.</td>
+          </tr>
+          <tr>
+            <td>UI / responsive</td>
+            <td>Critical provider workflows across the agreed desktop, tablet, and mobile browser matrix; dashboard readability, charts/tables, touch controls, zoom, orientation, session expiry/logout, stale and offline states, and network-switch/retry behavior.</td>
+            <td><strong>Month 1:</strong> define representative devices and smoke coverage. <strong>Months 2–3:</strong> run responsive regression as screens stabilize and explore on real devices. <strong>Month 4:</strong> release-candidate regression on the critical matrix.</td>
+            <td><span class="automation partial">Partial</span><br>Automate stable smoke journeys and viewport checks; manually explore touch, readability, orientation, and real-device behavior.</td>
+          </tr>
+          <tr>
+            <td>User acceptance</td>
+            <td>Doctors, nurses, and administrators validate realistic tasks: find the correct patient, interpret current/freshness state, use key dashboard filters, and complete role-appropriate workflows. UAT confirms workflow fit, not clinical validity of analytics.</td>
+            <td><strong>Month 3:</strong> agree task scripts, synthetic scenarios, and acceptance evidence with provider representatives. <strong>Month 4:</strong> execute on a release candidate after critical system/security issues are resolved; retest fixes before sign-off.</td>
+            <td><span class="automation human">Human-led</span><br>Provider judgment and sign-off are manual; automate setup, evidence capture, and repeatable regression around accepted flows.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <section class="timeline" aria-labelledby="timeline-title">
+      <h2 id="timeline-title">Four-month execution rhythm</h2>
+      <div class="months">
+        <article class="month">
+          <h3>Month 1 · Define &amp; enable</h3>
+          <p>Agree targets, critical workflows, roles, test data, supported devices, peak workload, environments, and security boundaries. Build unit tests and API/UI smoke foundations.</p>
+        </article>
+        <article class="month">
+          <h3>Month 2 · Integrate &amp; baseline</h3>
+          <p>Run API/database integration regression, expand UI automation, establish performance baselines, and start continuous synthetic availability checks once the environment is representative.</p>
+        </article>
+        <article class="month">
+          <h3>Month 3 · Harden &amp; observe</h3>
+          <p>Run security assessment, peak-load and recovery tests, tune bottlenecks, continue availability monitoring, and prepare provider UAT scenarios.</p>
+        </article>
+        <article class="month">
+          <h3>Month 4 · Accept &amp; release</h3>
+          <p>Complete UAT, release-candidate regression, security/performance retests, final mobile matrix, defect triage, and stakeholder sign-off.</p>
+        </article>
+      </div>
+      <p class="gate"><strong>Release gate:</strong> zero open Sev1/Sev2 defects, zero open Critical/High API security findings, all approved critical analytics-integrity and authorization cases passing, and stakeholder disposition for remaining Sev3+ defects.</p>
+      <p class="schedule-risk"><strong>Schedule risk:</strong> A full 30-day availability observation must begin by early Month 3 to finish inside the four-month window. If environment stability is late, uptime evidence, performance retesting, and the final mobile matrix may compete with Month 4 UAT and release sign-off.</p>
+    </section>
+
+    <footer class="footer">
+      <span>Companion document: MediTrack testing scope and measurable objectives</span>
+      <span>Schedule and targets require stakeholder baselining</span>
+    </footer>
+  </main>
+</body>
+</html>

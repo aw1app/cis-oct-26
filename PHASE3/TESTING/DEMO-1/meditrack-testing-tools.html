@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Recommended testing tools for MediTrack and GitHub Actions.">
+  <title>MediTrack | Testing Tools</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #1d2928;
+      --muted: #536462;
+      --paper: #f5f7f3;
+      --surface: #fff;
+      --line: #d7dfd9;
+      --green: #176d58;
+      --green-soft: #e6f2ec;
+      --blue: #315d77;
+      --blue-soft: #e8f0f5;
+      --gold: #82621a;
+      --gold-soft: #f5f0df;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: "Avenir Next", Avenir, "Segoe UI", sans-serif;
+      line-height: 1.55;
+    }
+
+    main { width: min(1120px, calc(100% - 40px)); margin: 0 auto; padding: 42px 0 56px; }
+    .masthead, footer { display: flex; justify-content: space-between; gap: 20px; color: var(--muted); font-size: .78rem; }
+    .masthead { padding-bottom: 14px; border-bottom: 1px solid var(--line); font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+    .masthead strong { color: var(--green); }
+    h1, h2, p { margin-top: 0; }
+    h1 { margin: 36px 0 12px; font: 400 clamp(2.4rem, 5vw, 4rem)/1.05 Georgia, "Times New Roman", serif; letter-spacing: 0; }
+    .lede { max-width: 760px; margin-bottom: 24px; color: var(--muted); font-size: 1.03rem; }
+    .note { margin-bottom: 20px; padding: 14px 18px; border-left: 4px solid var(--gold); background: var(--gold-soft); color: #574617; font-size: .9rem; }
+    .table-wrap { overflow-x: auto; border: 1px solid var(--line); background: var(--surface); }
+    table { width: 100%; min-width: 760px; border-collapse: collapse; text-align: left; font-size: .9rem; }
+    th, td { padding: 16px; border-bottom: 1px solid var(--line); vertical-align: top; }
+    th { background: #e9efea; color: #43524f; font-size: .73rem; letter-spacing: .06em; text-transform: uppercase; }
+    tbody tr:last-child td { border-bottom: 0; }
+    tbody tr:nth-child(even) { background: #fbfcfa; }
+    td:first-child { width: 160px; font-weight: 800; }
+    td:nth-child(2) { width: 34%; }
+    code { padding: 1px 4px; background: #eef2ef; color: #24463d; font-size: .9em; }
+    h2 { margin: 28px 0 10px; font: 400 1.5rem Georgia, "Times New Roman", serif; }
+    .guidance { padding: 18px 20px; border: 1px solid var(--line); border-top: 4px solid var(--blue); background: var(--surface); }
+    .guidance p { margin: 0; color: #354442; font-size: .92rem; }
+    footer { margin-top: 24px; padding-top: 14px; border-top: 1px solid var(--line); }
+
+    @media (max-width: 650px) {
+      main { width: min(100% - 28px, 560px); padding-top: 24px; }
+      .masthead, footer { flex-direction: column; gap: 4px; }
+    }
+    @media print {
+      :root { --paper: #fff; }
+      body { background: #fff; font-size: 9pt; }
+      main { width: 100%; padding: 0; }
+      .table-wrap { overflow: visible; }
+      table { min-width: 0; font-size: 8pt; }
+      th, td { padding: 8px; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="masthead">
+      <span><strong>MediTrack</strong> / Quality Assurance</span>
+      <span>Testing tools · GitHub Actions</span>
+    </div>
+
+    <header>
+      <h1>Testing tools</h1>
+      <p class="lede">Recommended tools for the MediTrack test strategy, selected for the React frontend, Python/FastAPI services, PostgreSQL database, and GitHub Actions CI/CD pipeline.</p>
+    </header>
+
+    <p class="note"><strong>Implementation note:</strong> Confirm the existing frontend build and test setup before adding packages. Run security scans and performance tests only against approved code, dependencies, and non-production environments.</p>
+
+    <div class="table-wrap" role="region" aria-label="Testing tools by test type" tabindex="0">
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">Test type</th>
+            <th scope="col">Tool</th>
+            <th scope="col">Reason</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Unit</td>
+            <td><code>pytest</code> for Python; <code>Vitest</code> and <code>React Testing Library</code> for React</td>
+            <td>Fits the backend and frontend stack. Run fast, deterministic tests on every pull request to catch regressions in analytics calculations, validation, time/unit handling, and component states.</td>
+          </tr>
+          <tr>
+            <td>API / integration</td>
+            <td><code>pytest</code>, <code>httpx</code>, and a PostgreSQL service container in GitHub Actions</td>
+            <td>Exercises FastAPI contracts and real PostgreSQL persistence, including patient-data updates, duplicate or reordered events, corrections, and error handling. Run focused tests on pull requests and broader regression on a schedule or before releases.</td>
+          </tr>
+          <tr>
+            <td>Security</td>
+            <td><code>Bandit</code>, <code>pip-audit</code>, <code>npm audit</code>, OWASP ZAP Baseline, and <code>pytest</code> authorization tests</td>
+            <td>Checks Python code and dependency risks, frontend dependencies, and authorized API behavior. Use tests for MediTrack role-based access and patient isolation. Run ZAP against an approved non-production target; manually review important findings and authorization edge cases.</td>
+          </tr>
+          <tr>
+            <td>Performance</td>
+            <td><code>k6</code> for API/load probes; <code>Playwright</code> for dashboard refresh timing</td>
+            <td><code>k6</code> measures throughput, latency percentiles, and sustained synthetic availability. <code>Playwright</code> can measure the interval from an accepted test update to its dashboard display. Use a stable, representative environment because shared CI runner timings can be noisy.</td>
+          </tr>
+          <tr>
+            <td>UI / responsive</td>
+            <td><code>Playwright</code></td>
+            <td>Automates critical provider workflows across browsers and viewport sizes, including mobile emulation, in GitHub Actions. Supplement emulation with representative real-device checks for touch, orientation, zoom, and mobile browser behavior.</td>
+          </tr>
+          <tr>
+            <td>User acceptance</td>
+            <td>Provider-led acceptance checklists tracked in GitHub Issues or Projects; <code>Playwright</code> regression tests</td>
+            <td>Keeps workflow evaluation and sign-off human-led for doctors, nurses, and administrators. GitHub Actions can rerun accepted workflows as regression checks and retain reports as artifacts; automation does not replace provider judgment.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <section>
+      <h2>GitHub Actions workflow</h2>
+      <div class="guidance">
+        <p>Run unit tests and focused API checks on pull requests. Run broader integration, security, and UI suites nightly or before releases. Publish test and coverage reports as workflow artifacts. Run sustained performance and availability checks on a stable test environment; reserve the 30-day availability objective for continuous monitoring outside short-lived CI jobs.</p>
+      </div>
+    </section>
+
+    <footer>
+      <span>Based on the MediTrack project brief and test strategy</span>
+      <span>Tool versions and target environments should be pinned by the project</span>
+    </footer>
+  </main>
+</body>
+</html>
