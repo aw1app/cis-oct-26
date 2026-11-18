@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SQL Injection, Simply Explained</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #203038;
+      --muted: #52656d;
+      --line: #d7e1df;
+      --paper: #fff;
+      --canvas: #edf3f0;
+      --green: #176b55;
+      --pale: #e7f3ed;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 2rem 1rem;
+      color: var(--ink);
+      background: var(--canvas);
+      font: 16px/1.6 system-ui, sans-serif;
+    }
+    main {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: clamp(1.25rem, 5vw, 2.5rem);
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-top: 6px solid var(--green);
+    }
+    h1 { margin: 0 0 .4rem; font-size: clamp(1.6rem, 5vw, 2.2rem); line-height: 1.2; }
+    h2 { margin: 1.6rem 0 .4rem; font-size: 1.15rem; }
+    p { margin: .55rem 0; }
+    .intro { color: var(--muted); margin-bottom: 1.5rem; }
+    .example {
+      margin: 1rem 0;
+      padding: 1rem 1.1rem;
+      background: var(--pale);
+      border-left: 4px solid var(--green);
+    }
+    code { font-family: ui-monospace, monospace; overflow-wrap: anywhere; }
+    pre {
+      max-width: 100%;
+      padding: 1rem;
+      overflow-x: auto;
+      background: #f1f5f3;
+      border: 1px solid var(--line);
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+    footer { margin-top: 1.5rem; color: var(--muted); font-size: .9rem; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>SQL Injection, Simply Explained</h1>
+    <p class="intro">A plain-language explanation of the issue in <code>alert_utils.py</code>.</p>
+
+    <h2>The basic idea</h2>
+    <p>This program looks up alerts that match a source name. It builds a database question by joining pieces of text together. The source name is supposed to be just a label, but the database may mistake specially crafted text for part of its instructions.</p>
+
+    <div class="example">
+      <p><strong>Imagine a librarian:</strong> You ask, “Find books with this title,” and give the librarian a title on a note. If the note is accidentally treated as a new command instead of just a title, the librarian might bring back books you did not ask for. That mix-up is the main idea behind SQL injection.</p>
+    </div>
+
+    <h2>What could go wrong here?</h2>
+    <p>If someone can control the source name sent to this function, they may be able to confuse the database's search. It could show alerts from more sources than intended or produce an error. The exact risk depends on how the program is connected to users and what data is in the database.</p>
+    <p>The Python SQLite <code>execute()</code> method rejects a request containing multiple separate SQL statements. That helps, but it does not stop specially crafted input from changing the meaning of the one statement being run.</p>
+
+    <h2>How to prevent it</h2>
+    <p>Use a placeholder for the source name. The database then receives the search instruction and the source value separately, so it knows the value is data, not a new instruction.</p>
+    <pre><code>cursor.execute(
+    "SELECT * FROM alerts WHERE source = ?",
+    (source_name,),
+)</code></pre>
+    <p>In short: keep the database instructions separate from the values people provide.</p>
+
+    <footer>Based on the query in <code>alert_utils.py</code>. This page explains the risk without including an attack string or exploitation steps.</footer>
+  </main>
+</body>
+</html>

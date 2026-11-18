@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Code Review: alert_utils.py</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #202a32;
+      --muted: #596873;
+      --line: #d7dfe3;
+      --paper: #ffffff;
+      --canvas: #f2f5f4;
+      --accent: #176b61;
+      --high: #a52e28;
+      --medium: #825308;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 2rem 1rem;
+      background: var(--canvas);
+      color: var(--ink);
+      font: 16px/1.55 system-ui, sans-serif;
+    }
+    main {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: clamp(1.25rem, 4vw, 2.5rem);
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-top: 5px solid var(--accent);
+    }
+    h1 { margin: 0 0 .35rem; font-size: 1.8rem; }
+    .subtitle { margin: 0 0 1.75rem; color: var(--muted); }
+    ol { margin: 0; padding-left: 1.5rem; }
+    li { padding: 0 0 1.2rem .35rem; }
+    li + li { border-top: 1px solid var(--line); padding-top: 1.2rem; }
+    h2 { display: inline; margin: 0; font-size: 1.08rem; }
+    .severity {
+      display: inline-block;
+      margin-right: .4rem;
+      font-size: .75rem;
+      font-weight: 700;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+    }
+    .high { color: var(--high); }
+    .medium { color: var(--medium); }
+    p { margin: .45rem 0 0; }
+    code { font-family: ui-monospace, monospace; }
+    footer { margin-top: 1.2rem; color: var(--muted); font-size: .9rem; }
+    @media (max-width: 520px) {
+      body { padding: .5rem; }
+      main { padding: 1rem; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Code Review: <code>alert_utils.py</code></h1>
+    <p class="subtitle">Maintainability and safety findings, ordered by impact.</p>
+    <ol>
+      <li>
+        <span class="severity high">High</span>
+        <h2>SQL is built through string concatenation</h2>
+        <p><code>get_alerts_by_source</code> inserts <code>source_name</code> directly into the query at line 28 and executes it at line 29. If an attacker can influence this value, SQLite may interpret part of it as SQL logic rather than as a literal source name. Depending on how the function is exposed, this could return alerts beyond the requested source or cause query errors.</p>
+        <p>Python's SQLite <code>execute()</code> rejects multiple SQL statements, which limits stacked-statement attacks, but does not prevent an input from changing the meaning of this single statement. Bind the input as a parameter so it is treated strictly as data:</p>
+        <pre><code>cursor.execute(
+    "SELECT * FROM alerts WHERE source = ?",
+    (source_name,),
+)</code></pre>
+        <p>A regression test should pass a source name containing SQL punctuation and verify that it is treated as an exact literal value.</p>
+      </li>
+      <li>
+        <span class="severity high">High</span>
+        <h2>Credentials are embedded in source</h2>
+        <p>The database password and admin API key are hard-coded at lines 21–22, and neither is used in this module. This couples secrets to the codebase and makes rotation and environment separation harder. Remove the literals, load secrets from an approved configuration or secret store, and rotate them if they are real.</p>
+      </li>
+      <li>
+        <span class="severity medium">Medium</span>
+        <h2>Critical and warning formatters duplicate logic</h2>
+        <p>Lines 3–9 and 12–18 repeat message assembly and escalation logic; only the alert label differs. A shared formatter with the label supplied as an argument would keep future wording or behavior changes consistent.</p>
+      </li>
+      <li>
+        <span class="severity medium">Medium</span>
+        <h2>Database connection is not explicitly closed</h2>
+        <p>The connection is opened at line 26, but lines 27–30 return without closing it. Repeated calls can retain database resources longer than intended. Use a context-managed connection or ensure cleanup in a <code>finally</code> block.</p>
+      </li>
+      <li>
+        <span class="severity medium">Medium</span>
+        <h2>Escalation multiplier is a magic number</h2>
+        <p>The <code>1.5</code> multiplier appears at lines 7 and 16, while the message spells it as “150%.” A named constant or an explicit policy setting would make the escalation rule easier to understand and change consistently.</p>
+      </li>
+      <li>
+        <span class="severity medium">Medium</span>
+        <h2>Query selects every column</h2>
+        <p><code>SELECT *</code> at line 28 makes the returned shape depend on the table schema and fetches columns the caller may not need. List the required columns explicitly to make the function’s data contract clear and resilient to schema changes.</p>
+      </li>
+    </ol>
+    <footer>Review scope: <code>alert_utils.py</code>. No source code was changed.</footer>
+  </main>
+</body>
+</html>
