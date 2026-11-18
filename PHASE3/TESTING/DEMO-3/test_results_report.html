@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>Money Transfer | QA Test Report</title>
+  <style>
+    :root {
+      font-family: "Aptos", "Segoe UI", sans-serif;
+      color: #172a2a;
+      background: #f3f6f2;
+      font-synthesis: none;
+      --ink: #172a2a;
+      --muted: #627473;
+      --line: #dce5df;
+      --green: #15745d;
+      --green-soft: #d8eee4;
+      --red: #c3483d;
+      --red-soft: #f7e1dc;
+      --amber: #bd7e21;
+      --amber-soft: #f6ecd7;
+      --panel: #fff;
+    }
+
+    * { box-sizing: border-box; }
+    body { margin: 0; min-width: 320px; }
+    main { max-width: 1120px; margin: 0 auto; padding: 48px 28px 56px; }
+    .eyebrow { margin: 0 0 10px; color: var(--green); font-size: 12px; font-weight: 750; letter-spacing: 1.4px; text-transform: uppercase; }
+    h1 { margin: 0; font-size: clamp(30px, 4vw, 44px); line-height: 1.08; letter-spacing: 0; }
+    .subtitle { margin: 12px 0 30px; color: var(--muted); font-size: 15px; }
+    .metrics { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin-bottom: 18px; }
+    .metric { min-height: 112px; padding: 19px 20px; border: 1px solid var(--line); border-radius: 6px; background: var(--panel); }
+    .metric-label { display: block; color: var(--muted); font-size: 13px; }
+    .metric-value { display: block; margin-top: 10px; font-size: 30px; font-weight: 720; line-height: 1; }
+    .metric-value.pass { color: var(--green); }
+    .metric-value.fail { color: var(--red); }
+    .metric-value.blocked { color: var(--amber); }
+    .panels { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+    .panel { padding: 22px; border: 1px solid var(--line); border-radius: 6px; background: var(--panel); }
+    .panel h2 { margin: 0; font-size: 17px; letter-spacing: 0; }
+    .panel-note { margin: 6px 0 22px; color: var(--muted); font-size: 13px; }
+    .status-bar { display: flex; overflow: hidden; height: 18px; border-radius: 3px; background: #edf1ed; }
+    .status-bar span { display: block; height: 100%; }
+    .status-pass { width: 60%; background: var(--green); }
+    .status-fail { width: 33.333%; background: var(--red); }
+    .status-blocked { width: 6.667%; background: var(--amber); }
+    .legend { display: flex; flex-wrap: wrap; gap: 10px 18px; margin-top: 17px; }
+    .legend-item { display: inline-flex; align-items: center; gap: 7px; color: #3c5150; font-size: 13px; }
+    .swatch { width: 9px; height: 9px; border-radius: 2px; }
+    .severity-list { display: grid; gap: 15px; }
+    .severity-row { display: grid; grid-template-columns: 76px 1fr 25px; align-items: center; gap: 12px; font-size: 13px; }
+    .severity-label { color: #3c5150; }
+    .track { height: 9px; overflow: hidden; border-radius: 2px; background: #edf1ed; }
+    .fill { height: 100%; border-radius: inherit; }
+    .critical { width: 20%; background: #8d2928; }
+    .major { width: 60%; background: var(--red); }
+    .minor { width: 20%; background: var(--amber); }
+    .count { color: var(--ink); text-align: right; font-weight: 700; }
+    .findings-section { margin-top: 30px; }
+    .findings-section h2 { margin: 0; font-size: 19px; }
+    .findings-intro { margin: 7px 0 18px; color: var(--muted); font-size: 13px; }
+    .findings-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 22px; }
+    .finding { padding: 14px 4px 0 0; border-top: 2px solid var(--line); }
+    .finding h3 { margin: 0 0 9px; font-size: 15px; }
+    .finding p { margin: 8px 0 0; color: #3c5150; font-size: 13px; line-height: 1.55; }
+    .finding strong { color: var(--ink); }
+    .finding-refs { color: var(--green); font-size: 12px; font-weight: 700; }
+    .table-panel { margin-top: 18px; padding: 22px; border: 1px solid var(--line); border-radius: 6px; background: var(--panel); }
+    .table-panel h2 { margin: 0; font-size: 17px; }
+    .table-wrap { overflow-x: auto; margin-top: 16px; }
+    table { width: 100%; border-collapse: collapse; text-align: left; }
+    th, td { padding: 12px 10px; border-bottom: 1px solid #e8eeea; vertical-align: top; }
+    th { color: var(--muted); font-size: 11px; font-weight: 750; letter-spacing: .8px; text-transform: uppercase; }
+    td { font-size: 13px; }
+    tbody tr:last-child td { border-bottom: 0; }
+    .module { font-weight: 700; }
+    .test-id { color: var(--muted); white-space: nowrap; }
+    .priority { white-space: nowrap; font-weight: 750; }
+    .priority-p0 { color: #8d2928; }
+    .priority-p1 { color: #a45b16; }
+    .priority-p2 { color: var(--green); }
+    .failure-count { color: var(--red); font-weight: 750; }
+    .footnote { margin: 16px 0 0; color: var(--muted); font-size: 12px; line-height: 1.5; }
+    @media (max-width: 720px) {
+      main { padding: 32px 18px 40px; }
+      .metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .panels { grid-template-columns: 1fr; }
+      .findings-grid { grid-template-columns: 1fr; gap: 18px; }
+    }
+    @media (max-width: 420px) {
+      .metric { min-height: 96px; padding: 15px; }
+      .metric-value { font-size: 26px; }
+      .panel, .table-panel { padding: 17px; }
+      th, td { padding: 10px 8px; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <p class="eyebrow">Mobile banking · QA summary</p>
+      <h1>Money transfer test report</h1>
+      <p class="subtitle">Execution results, logged defect severity, and failed tests by module</p>
+    </header>
+
+    <section class="metrics" aria-label="Test totals">
+      <article class="metric"><span class="metric-label">Total test cases</span><strong class="metric-value">15</strong></article>
+      <article class="metric"><span class="metric-label">Passed</span><strong class="metric-value pass">9</strong></article>
+      <article class="metric"><span class="metric-label">Failed</span><strong class="metric-value fail">5</strong></article>
+      <article class="metric"><span class="metric-label">Blocked</span><strong class="metric-value blocked">1</strong></article>
+    </section>
+
+    <section class="panels" aria-label="Test result charts">
+      <article class="panel">
+        <h2>Execution status</h2>
+        <p class="panel-note">Pass rate: 60% of all 15 test cases</p>
+        <div class="status-bar" role="img" aria-label="Status distribution: 9 passed, 5 failed, 1 blocked">
+          <span class="status-pass"></span><span class="status-fail"></span><span class="status-blocked"></span>
+        </div>
+        <div class="legend" aria-label="Status counts">
+          <span class="legend-item"><span class="swatch" style="background:var(--green)"></span>Passed 9 (60%)</span>
+          <span class="legend-item"><span class="swatch" style="background:var(--red)"></span>Failed 5 (33.3%)</span>
+          <span class="legend-item"><span class="swatch" style="background:var(--amber)"></span>Blocked 1 (6.7%)</span>
+        </div>
+      </article>
+
+      <article class="panel">
+        <h2>Defects by severity</h2>
+        <p class="panel-note">5 defects logged against failed tests</p>
+        <div class="severity-list" role="img" aria-label="One critical defect, three major defects, and one minor defect">
+          <div class="severity-row"><span class="severity-label">Critical</span><div class="track"><div class="fill critical"></div></div><span class="count">1</span></div>
+          <div class="severity-row"><span class="severity-label">Major</span><div class="track"><div class="fill major"></div></div><span class="count">3</span></div>
+          <div class="severity-row"><span class="severity-label">Minor</span><div class="track"><div class="fill minor"></div></div><span class="count">1</span></div>
+        </div>
+      </article>
+    </section>
+
+    <section class="findings-section" aria-labelledby="findings-title">
+      <h2 id="findings-title">Observed failure points</h2>
+      <p class="findings-intro">The failed cases point to gaps in transaction safeguards, clear on-screen feedback, and responsiveness under load.</p>
+      <div class="findings-grid">
+        <article class="finding">
+          <h3>Transfer flow and safety</h3>
+          <p>OTP delivery did not complete within 60 seconds for a new payee, interrupting transfer authorization (<span class="finding-refs">TC03 / DEF-101, Critical</span>).</p>
+          <p>After network loss, automatic retry caused a duplicate debit, creating a transaction-integrity risk. The transfer-history check remains blocked until this is fixed (<span class="finding-refs">TC06 / DEF-102, Major; TC13 blocked</span>).</p>
+        </article>
+        <article class="finding">
+          <h3>Interface and error feedback</h3>
+          <p>On 5-inch devices, the confirmation button was hidden, preventing users from completing the confirmation step (<span class="finding-refs">TC09 / DEF-103, Minor</span>).</p>
+          <p>An invalid beneficiary account produced a generic error instead of identifying the field, leaving the user without actionable correction guidance (<span class="finding-refs">TC12 / DEF-104, Major</span>).</p>
+        </article>
+        <article class="finding">
+          <h3>System response under load</h3>
+          <p>At a peak load of 500 users, transfer response time exceeded the 5-second target; the recorded test time was 12.4 seconds (<span class="finding-refs">TC15 / DEF-105, Major</span>).</p>
+          <p>Together, these results show failures in authentication delivery, retry handling, actionable validation, and performance at the tested load.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="table-panel" aria-labelledby="recommendations-title">
+      <h2 id="recommendations-title">Prioritized recommendations</h2>
+      <p class="panel-note">Proposed triage order based on financial impact, security, and user impact; priorities are not fields in the source CSV.</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th scope="col">Priority</th><th scope="col">Focus</th><th scope="col">Recommended action</th><th scope="col">Defect link and success check</th></tr></thead>
+          <tbody>
+            <tr>
+              <td class="priority priority-p0">P0 · Immediate</td>
+              <td>Prevent duplicate transfers</td>
+              <td>Make transfer submission idempotent and debit/credit processing atomic. After a timeout or connection loss, check the transaction's authoritative status before retrying; show a clear pending state while it is resolved.</td>
+              <td>TC06 / DEF-102; TC13 is blocked. Repeated requests must never create a second debit, and transfer history must reconcile the final result.</td>
+            </tr>
+            <tr>
+              <td class="priority priority-p1">P1 · High</td>
+              <td>Secure OTP completion</td>
+              <td>Monitor OTP delivery, provide a controlled resend path with expiry and attempt limits, and fail closed with a useful message when authorization cannot complete. Do not bypass OTP to improve completion.</td>
+              <td>TC03 / DEF-101. Verify authorized users can complete OTP within the 60-second expectation and failed or repeated attempts remain rate-limited and auditable.</td>
+            </tr>
+            <tr>
+              <td class="priority priority-p1">P1 · High</td>
+              <td>Peak-load performance</td>
+              <td>Profile the transfer path at and above expected peak load, remove bottlenecks, and monitor latency and timeouts. Keep the transaction state visible so users do not resubmit during slow responses.</td>
+              <td>TC15 / DEF-105. Meet the existing 5-second target at 500-user peak load and verify slow or timed-out requests cannot result in duplicate transfers.</td>
+            </tr>
+            <tr>
+              <td class="priority priority-p2">P2 · Medium</td>
+              <td>Actionable validation</td>
+              <td>Return clear, field-level beneficiary-account errors, preserve safe form input, and keep server-side validation authoritative.</td>
+              <td>TC12 / DEF-104. Invalid account input identifies the beneficiary field and explains how to correct it without exposing sensitive data.</td>
+            </tr>
+            <tr>
+              <td class="priority priority-p2">P2 · Medium</td>
+              <td>Responsive confirmation</td>
+              <td>Rework the confirmation layout so the primary action stays visible or predictably reachable on small screens; check larger text, orientation, and accessibility settings.</td>
+              <td>TC09 / DEF-103. Confirm button and transfer summary remain visible, readable, and operable on the tested 5-inch layout.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="table-panel" aria-labelledby="failures-title">
+      <h2 id="failures-title">Failed tests by module</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th scope="col">Module</th><th scope="col">Failed test</th><th scope="col">Test ID</th><th scope="col">Failures</th></tr></thead>
+          <tbody>
+            <tr><td class="module">Authentication</td><td>Transfer to a new payee with OTP</td><td class="test-id">TC03</td><td class="failure-count">1</td></tr>
+            <tr><td class="module">Performance</td><td>Transfer under peak load of 500 users</td><td class="test-id">TC15</td><td class="failure-count">1</td></tr>
+            <tr><td class="module">Reliability</td><td>Transfer during network loss</td><td class="test-id">TC06</td><td class="failure-count">1</td></tr>
+            <tr><td class="module">UI</td><td>Confirmation screen on small devices</td><td class="test-id">TC09</td><td class="failure-count">1</td></tr>
+            <tr><td class="module">Validation</td><td>Invalid beneficiary account number</td><td class="test-id">TC12</td><td class="failure-count">1</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="footnote">Pass rate uses all test cases as the denominator, including the blocked case. Defect severity counts are based on defects recorded in the results file.</p>
+    </section>
+  </main>
+</body>
+</html>

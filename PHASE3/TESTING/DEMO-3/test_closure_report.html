@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>Money Transfer Test Closure Report</title>
+  <style>
+    :root {
+      font-family: "Aptos", "Segoe UI", sans-serif;
+      color: #172a2a;
+      background: #f3f6f2;
+      --ink: #172a2a;
+      --muted: #627473;
+      --line: #dce5df;
+      --green: #15745d;
+      --red: #b73e36;
+      --amber: #a56816;
+      --paper: #fff;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; min-width: 320px; }
+    main { max-width: 960px; margin: 0 auto; padding: 38px 26px 56px; }
+    header { padding-bottom: 22px; border-bottom: 1px solid var(--line); }
+    .eyebrow { margin: 0 0 8px; color: var(--green); font-size: 11px; font-weight: 750; letter-spacing: 1.2px; text-transform: uppercase; }
+    h1 { margin: 0; font-size: clamp(29px, 4vw, 40px); line-height: 1.1; }
+    .subtitle { margin: 10px 0 0; color: var(--muted); font-size: 14px; }
+    section { margin-top: 24px; }
+    h2 { margin: 0 0 10px; font-size: 18px; }
+    p, li { font-size: 14px; line-height: 1.55; }
+    p { margin: 7px 0; }
+    .summary { padding: 17px 19px; border-left: 4px solid var(--red); background: var(--paper); }
+    .summary strong { color: var(--red); }
+    .table-wrap { overflow-x: auto; border: 1px solid var(--line); background: var(--paper); }
+    table { width: 100%; border-collapse: collapse; text-align: left; }
+    th, td { padding: 10px 12px; border-bottom: 1px solid #e8eeea; vertical-align: top; font-size: 13px; }
+    th { color: var(--muted); font-size: 11px; letter-spacing: .6px; text-transform: uppercase; }
+    tbody tr:last-child td { border-bottom: 0; }
+    .num { white-space: nowrap; }
+    .critical { color: var(--red); font-weight: 750; }
+    .major { color: var(--amber); font-weight: 750; }
+    .minor { color: var(--muted); font-weight: 750; }
+    .priority { white-space: nowrap; font-weight: 750; }
+    .p0 { color: var(--red); }
+    .p1 { color: var(--amber); }
+    .p2 { color: var(--green); }
+    .verdict { padding: 12px 15px; border: 1px solid #e8c8c2; background: #fff7f5; }
+    .verdict strong { color: var(--red); }
+    .note { color: var(--muted); font-size: 12px; }
+    @media (max-width: 600px) {
+      main { padding: 28px 16px 40px; }
+      th, td { padding: 9px; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <p class="eyebrow">Mobile banking · QA closure</p>
+      <h1>Money Transfer Test Closure Report</h1>
+      <p class="subtitle">Test cycle assessment based on test_results.csv</p>
+    </header>
+
+    <section aria-labelledby="summary">
+      <h2 id="summary">1. Summary</h2>
+      <div class="summary">
+        <p><strong>Cycle is not ready to close or release.</strong> Of 15 cases, 9 passed, 5 failed, and 1 was blocked. The pass rate is 60%; the critical OTP defect DEF-101 remains recorded as a failure, and TC13 remains blocked by DEF-102.</p>
+      </div>
+    </section>
+
+    <section aria-labelledby="scope">
+      <h2 id="scope">2. Scope and objectives of the test cycle</h2>
+      <p>Assessment covered money transfers across transfer flows, authentication, validation, reliability, UI, security, and performance. The objective was to verify successful and scheduled transfers, authorization and validation behavior, failure handling, transaction integrity, usability, and response under peak load.</p>
+    </section>
+
+    <section aria-labelledby="metrics">
+      <h2 id="metrics">3. Execution metrics</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Measure</th><th>Result</th></tr></thead>
+          <tbody>
+            <tr><td>Total test cases</td><td class="num">15</td></tr>
+            <tr><td>Passed</td><td class="num">9</td></tr>
+            <tr><td>Failed</td><td class="num">5</td></tr>
+            <tr><td>Blocked</td><td class="num">1</td></tr>
+            <tr><td>Pass rate (passed ÷ all cases, including blocked)</td><td class="num">60% (9 ÷ 15)</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section aria-labelledby="defects">
+      <h2 id="defects">4. Defect summary</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Defect ID</th><th>Test ID</th><th>Severity</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td>DEF-101</td><td>TC03</td><td class="critical">Critical</td><td>OTP was not received within 60 seconds for a new payee transfer.</td></tr>
+            <tr><td>DEF-102</td><td>TC06</td><td class="major">Major</td><td>Automatic retry during network loss caused a duplicate debit.</td></tr>
+            <tr><td>DEF-103</td><td>TC09</td><td class="minor">Minor</td><td>Confirmation button was hidden on 5-inch screens.</td></tr>
+            <tr><td>DEF-104</td><td>TC12</td><td class="major">Major</td><td>Invalid beneficiary account displayed a generic error instead of a field-level message.</td></tr>
+            <tr><td>DEF-105</td><td>TC15</td><td class="major">Major</td><td>Response time exceeded the 5-second target at 500-user peak load (12.4 seconds recorded).</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section aria-labelledby="insights">
+      <h2 id="insights">5. Key insights</h2>
+      <ul>
+        <li>Transaction integrity is the highest-impact risk: retry behavior produced a duplicate debit (TC06 / DEF-102).</li>
+        <li>Transfer completion is constrained by OTP delivery (TC03 / DEF-101) and peak-load latency (TC15 / DEF-105).</li>
+        <li>Users receive weak recovery guidance for invalid account input (TC12 / DEF-104), and the confirmation action is inaccessible on tested small screens (TC09 / DEF-103).</li>
+      </ul>
+    </section>
+
+    <section aria-labelledby="recommendations">
+      <h2 id="recommendations">6. Recommendations</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Priority</th><th>Action</th><th>Addresses</th></tr></thead>
+          <tbody>
+            <tr><td class="priority p0">P0 · Immediate</td><td>Make transfer processing idempotent and atomic. Resolve transaction status before retrying after timeouts; show a clear pending state.</td><td>DEF-102 / TC06; unblock TC13</td></tr>
+            <tr><td class="priority p1">P1 · High</td><td>Improve OTP delivery monitoring and controlled resend/expiry behavior without bypassing authorization. Profile peak-load bottlenecks and meet the existing 5-second target.</td><td>DEF-101 / TC03; DEF-105 / TC15</td></tr>
+            <tr><td class="priority p2">P2 · Medium</td><td>Show actionable field-level validation and keep the confirmation action visible and operable on small screens.</td><td>DEF-104 / TC12; DEF-103 / TC09</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section aria-labelledby="risks">
+      <h2 id="risks">7. Open risks and blocked tests</h2>
+      <p>DEF-102 presents a duplicate-debit risk during network interruptions. TC13 (transfer history update) is blocked pending its fix and must be rerun. The results file does not record defect closure state; failed defects are treated as unresolved for this assessment.</p>
+    </section>
+
+    <section aria-labelledby="exit">
+      <h2 id="exit">8. Exit criteria assessment</h2>
+      <div class="verdict">
+        <p><strong>Not met.</strong> The critical-defect criterion is not met because TC03 / DEF-101 is recorded as a critical failure with no closure status. The pass rate is 60%, below the required 95%.</p>
+      </div>
+    </section>
+
+    <section aria-labelledby="release">
+      <h2 id="release">9. Release recommendation</h2>
+      <p><strong>No-go for release.</strong> Resolve and verify DEF-101 and DEF-102, address the remaining failures, rerun blocked TC13, then achieve at least a 95% pass rate with no open critical defects before reconsidering release.</p>
+    </section>
+  </main>
+</body>
+</html>
