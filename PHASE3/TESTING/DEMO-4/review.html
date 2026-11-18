@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bug Review: buggy_code.py</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #202a31;
+      --muted: #596970;
+      --paper: #f5f7f4;
+      --panel: #ffffff;
+      --line: #d7dfdc;
+      --accent: #176b5b;
+      --critical: #a63e36;
+      --warning: #8a5a16;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font: 16px/1.6 Georgia, "Times New Roman", serif;
+    }
+    main { width: min(900px, calc(100% - 36px)); margin: 48px auto; }
+    header { border-bottom: 2px solid var(--ink); padding-bottom: 22px; }
+    .eyebrow {
+      margin: 0 0 8px;
+      color: var(--accent);
+      font: 700 12px/1.4 "Trebuchet MS", sans-serif;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+    }
+    h1 { margin: 0; font-size: clamp(30px, 6vw, 46px); line-height: 1.1; }
+    .summary { margin: 16px 0 0; color: var(--muted); }
+    .notice {
+      margin: 24px 0;
+      padding: 14px 18px;
+      border-left: 4px solid var(--critical);
+      background: #f8e9e6;
+    }
+    .notice strong { color: var(--critical); }
+    h2 { margin: 32px 0 12px; font-size: 22px; }
+    .finding {
+      margin: 12px 0;
+      padding: 18px 20px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: var(--panel);
+    }
+    .finding h3 { margin: 0 0 8px; font-size: 19px; }
+    .line {
+      color: var(--accent);
+      font: 700 13px/1.5 "Trebuchet MS", sans-serif;
+      text-transform: uppercase;
+    }
+    p { margin: 8px 0 0; }
+    code {
+      padding: 1px 5px;
+      border-radius: 3px;
+      background: #edf1ef;
+      font: 0.9em/1.4 "SFMono-Regular", Consolas, monospace;
+    }
+    .severity { color: var(--warning); font: 700 12px/1.5 "Trebuchet MS", sans-serif; }
+    footer { margin-top: 28px; padding-top: 14px; border-top: 1px solid var(--line); color: var(--muted); font-size: 14px; }
+    @media (max-width: 520px) {
+      main { width: min(100% - 24px, 900px); margin: 28px auto; }
+      .finding { padding: 15px; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <p class="eyebrow">Code review</p>
+      <h1>Bug review</h1>
+      <p class="summary">File: <code>buggy_code.py</code> · 3 findings</p>
+    </header>
+
+    <div class="notice">
+      <strong>Execution is blocked:</strong> The syntax error on line 1 prevents Python from parsing the module, so none of its functions or main-program statements run as written. Findings 2 and 3 describe what happens after that parse error is corrected.
+    </div>
+
+    <section aria-labelledby="findings-title">
+      <h2 id="findings-title">Findings</h2>
+
+      <article class="finding">
+        <p class="line">Line 1 · Syntax error · Blocks the program</p>
+        <h3>Unclosed function parameter list</h3>
+        <p><code>def greet(name:</code> is missing the closing <code>)</code> before the colon. Python raises <code>SyntaxError: '(' was never closed</code> while parsing the file.</p>
+        <p><strong>When it runs:</strong> It does not start: the greeting is not printed, no input prompts appear, and the discount check is not reached.</p>
+      </article>
+
+      <article class="finding">
+        <p class="line">Line 7 · Incorrect result · Reachable after fixing line 1</p>
+        <h3>Input strings are concatenated, not added</h3>
+        <p><code>input()</code> returns text, and <code>number1 + number2</code> joins those strings. For inputs <code>3</code> and <code>4</code>, <code>total</code> becomes <code>34</code>, not numeric <code>7</code>.</p>
+        <p><strong>When it runs:</strong> The output claims the sum is <code>34</code>. Other inputs can similarly produce a joined string instead of an arithmetic sum.</p>
+      </article>
+
+      <article class="finding">
+        <p class="line">Line 12 · Boundary condition · Reachable after fixing line 1</p>
+        <h3>Age 60 is incorrectly excluded</h3>
+        <p>The docstring says the discount applies at age 60 or older, but <code>age &gt; 60</code> is false when <code>age</code> is exactly <code>60</code>.</p>
+        <p><strong>When it runs:</strong> <code>is_eligible_for_discount(60)</code> returns <code>False</code>, and the main block prints <code>False</code> for that customer.</p>
+      </article>
+    </section>
+
+    <footer>Review only. The source file was not modified. The parser error and behavior examples were checked with Python 3.</footer>
+  </main>
+</body>
+</html>
