@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pytest Report</title>
+  <style>
+    :root {
+      color-scheme: light;
+      font-family: system-ui, sans-serif;
+      color: #17252a;
+      background: #f3f6f5;
+    }
+    body {
+      max-width: 860px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+    header, section {
+      background: #fff;
+      border: 1px solid #d5dfdc;
+      border-radius: 6px;
+      padding: 20px 24px;
+      margin-bottom: 16px;
+    }
+    h1, h2 { margin-top: 0; }
+    .result {
+      display: inline-block;
+      color: #14532d;
+      background: #dcfce7;
+      border-radius: 4px;
+      padding: 6px 10px;
+      font-weight: 700;
+    }
+    .warning {
+      border-left: 4px solid #d97706;
+      padding: 10px 12px;
+      background: #fff7ed;
+    }
+    code { font-family: ui-monospace, monospace; }
+    li { margin: 8px 0; }
+    @media (max-width: 520px) {
+      body { margin: 20px auto; padding: 0 12px; }
+      header, section { padding: 16px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Pytest Report</h1>
+    <p><span class="result">11 passed</span></p>
+    <p><strong>Run:</strong> <code>python -m pytest test_priority.py test_integration.py -v</code></p>
+    <p><strong>Duration:</strong> 0.58 seconds<br><strong>Generated:</strong> 2026-11-18</p>
+  </header>
+
+  <section>
+    <h2>Priority Unit Tests</h2>
+    <ul>
+      <li>Critical alert above threshold returns score 80 and an integer: passed</li>
+      <li>Warning alert above threshold returns score 50 and an integer: passed</li>
+      <li>Info alert above threshold returns score 30 and an integer: passed</li>
+      <li>Unsupported severity raises <code>ValueError</code>: passed</li>
+      <li>Zero threshold raises <code>ValueError</code>: passed</li>
+      <li>Metric below threshold receives no bonus: passed</li>
+      <li>Metric exactly at threshold receives no bonus: passed</li>
+      <li>Bonus is capped at 40 points (maximum score 100): passed</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>API Integration Tests</h2>
+    <ul>
+      <li>Priority endpoint response matches the scoring function: passed</li>
+      <li>Nonexistent alert returns HTTP 404: passed</li>
+      <li>Zero-threshold alert returns HTTP 422 with the error message: passed</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Warning</h2>
+    <p class="warning">All tests passed. Starlette emitted a deprecation warning: its TestClient currently uses <code>httpx</code>; the installed version recommends <code>httpx2</code>. This warning did not affect test results.</p>
+  </section>
+</body>
+</html>

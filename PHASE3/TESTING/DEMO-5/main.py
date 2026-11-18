@@ -1,0 +1,36 @@
+from contextlib import asynccontextmanager
+from collections.abc import AsyncIterator
+
+from fastapi import Depends, FastAPI, HTTPException
+from sqlalchemy.orm import Session
+
+from database import Base, engine, get_db
+from models import Alert
+from priority_score import calculate_priority_score
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI) -> AsyncIterator[None]:
+    Base.metadata.create_all(bind=engine)
+    yield
+
+
+app = FastAPI(lifespan=lifespan)
+
+
+@app.get("/alerts/{alert_id}/priority")
+def get_alert_priority(alert_id: int, db: Session = Depends(get_db)) -> dict[str, int]:
+    alert = db.query(Alert).filter(Alert.id == alert_id).first()
+    if alert is None:
+        raise HTTPException(status_code=404, detail="Alert not found")
+
+    try:
+        priority_score = calculate_priority_score(
+            alert.severity,
+            alert.metric_value,
+            alert.threshold,
+        )
+    except ValueError as error:
+        raise HTTPException(status_code=422, detail=str(error)) from error
+
+    return {"alert_id": alert.id, "priority_score": priority_score}
