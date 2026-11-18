@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ERROR and WARN summary</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #202b2a;
+      --muted: #64716e;
+      --line: #dce4df;
+      --paper: #f5f7f3;
+      --white: #fff;
+      --red: #a53e35;
+      --amber: #8a5a12;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font: 16px/1.5 Georgia, "Times New Roman", serif;
+    }
+    main { max-width: 1100px; margin: 0 auto; padding: 48px 24px 64px; }
+    header { border-bottom: 2px solid var(--ink); padding-bottom: 22px; }
+    .eyebrow {
+      margin: 0 0 8px;
+      color: #2f6d54;
+      font: 700 12px/1.3 "Trebuchet MS", sans-serif;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+    }
+    h1 { margin: 0; font-size: clamp(30px, 5vw, 44px); line-height: 1.1; }
+    .subhead { margin: 10px 0 0; color: var(--muted); font: 14px "Trebuchet MS", sans-serif; }
+    .table-wrap { margin-top: 24px; overflow-x: auto; background: var(--white); }
+    table { width: 100%; border-collapse: collapse; text-align: left; }
+    th, td { padding: 13px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
+    th {
+      color: var(--muted);
+      font: 700 12px "Trebuchet MS", sans-serif;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+    td { font-size: 15px; }
+    td.level, td.count, td.time, td.endpoint { font-family: "Trebuchet MS", sans-serif; }
+    td.level { font-size: 12px; font-weight: 700; }
+    tr.error td.level { color: var(--red); }
+    tr.warn td.level { color: var(--amber); }
+    td.count, td.time { font-variant-numeric: tabular-nums; white-space: nowrap; }
+    td.count { font-weight: 700; }
+    td.endpoint { font-size: 13px; white-space: nowrap; }
+    code { font-size: 0.9em; overflow-wrap: anywhere; }
+    .note { margin: 16px 0 0; color: var(--muted); font: 13px/1.5 "Trebuchet MS", sans-serif; }
+    @media (max-width: 640px) {
+      main { padding: 32px 16px 48px; }
+      table { min-width: 850px; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <p class="eyebrow">Log summary · 10 September 2026</p>
+      <h1>Distinct ERROR and WARN messages</h1>
+      <p class="subhead">Grouped by message; alert IDs are normalized in the endpoint.</p>
+    </header>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">Level</th>
+            <th scope="col">Message</th>
+            <th scope="col">Count</th>
+            <th scope="col">First seen</th>
+            <th scope="col">Last seen</th>
+            <th scope="col">Endpoint</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="error">
+            <td class="level">ERROR</td>
+            <td>HTTP 500: <code>AttributeError: 'NoneType' object has no attribute 'upper'</code></td>
+            <td class="count">5</td>
+            <td class="time"><time datetime="2026-09-10T02:22:18">02:22:18</time></td>
+            <td class="time"><time datetime="2026-09-10T04:02:31">04:02:31</time></td>
+            <td class="endpoint">POST /alerts/{id}/explain</td>
+          </tr>
+          <tr class="warn">
+            <td class="level">WARN</td>
+            <td>Database connection pool at 82% capacity</td>
+            <td class="count">1</td>
+            <td class="time"><time datetime="2026-09-10T02:58:22">02:58:22</time></td>
+            <td class="time"><time datetime="2026-09-10T02:58:22">02:58:22</time></td>
+            <td class="endpoint">Not specified</td>
+          </tr>
+          <tr class="error">
+            <td class="level">ERROR</td>
+            <td>HTTP 404: Alert not found</td>
+            <td class="count">1</td>
+            <td class="time"><time datetime="2026-09-10T03:20:03">03:20:03</time></td>
+            <td class="time"><time datetime="2026-09-10T03:20:03">03:20:03</time></td>
+            <td class="endpoint">GET /alerts/{id}</td>
+          </tr>
+          <tr class="warn">
+            <td class="level">WARN</td>
+            <td>Database connection pool at 91% capacity</td>
+            <td class="count">1</td>
+            <td class="time"><time datetime="2026-09-10T03:50:07">03:50:07</time></td>
+            <td class="time"><time datetime="2026-09-10T03:50:07">03:50:07</time></td>
+            <td class="endpoint">Not specified</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note">Times are from the log; no timezone is specified. The two capacity warnings are kept separate because their messages differ by percentage.</p>
+  </main>
+</body>
+</html>
