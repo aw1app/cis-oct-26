@@ -1,0 +1,1 @@
+grep -nE 'Bearer sess_|[[:alnum:]_.]+@[[:alnum:]_.]+' request_draft.txt || echo "No matches found."
