@@ -1,5 +1,5 @@
 from threading import Lock
-from typing import TypedDict
+from typing import Protocol, TypedDict
 
 from .models import OrderItem, OrderResponse
 
@@ -10,7 +10,14 @@ class OrderData(TypedDict):
     total: float
 
 
-class OrderRepository:
+class OrderRepository(Protocol):
+    def save(self, order: OrderData) -> OrderResponse: ...
+
+    def list_all(self) -> list[OrderResponse]: ...
+
+
+
+class InMemoryOrderRepository:
     def __init__(self) -> None:
         self._orders: list[OrderResponse] = []
         self._lock = Lock()
